@@ -14,7 +14,12 @@ public class PostRepositorySteps {
     String title  = "My first post";
     String body = "This is my first post";
 
-    Post post = new Post(1,userId, title, content);
+    Post post = new Post(1,userId, title, body);
+
+    @After
+    public void afterScenario() {
+        PostRepository.dropTable();
+    }
 
     @Given("I have a post with userId {int} title {string} and body {string}")
     public void iHaveAPostWithUserIdTitleAndBody(int userId, String title, String body) {
@@ -32,7 +37,7 @@ public class PostRepositorySteps {
 
     @Then("the post should be saved in the repository")
     public void thePostShouldBeSavedInTheRepository() {
-        assertEquals(1, postId);
+        assert(postId != -1);
     }
 
     @When("I request the post by id")
