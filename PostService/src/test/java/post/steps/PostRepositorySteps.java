@@ -34,4 +34,17 @@ public class PostRepositorySteps {
     public void thePostShouldBeSavedInTheRepository() {
         assertEquals(1, postId);
     }
+
+    @When("I request the post by id")
+    public void iRequestThePostById() {
+        post = PostRepository.getPostById(postId);
+    }
+
+    @Then("the post should be returned")
+    public void thePostShouldBeReturned() {
+        assertEquals(userId, post.getUserId());
+        assertEquals(title, post.getTitle());
+        assertEquals(content, post.getBody());
+        assertEquals(postId, post.getId());
+    }
 }
