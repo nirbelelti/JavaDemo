@@ -1,7 +1,5 @@
 Feature: Testing User CRUD operations
 
-
-
   Scenario: Retrieve a user
     Given the database is empty
     And I create a new user with name "Bob" last name "Sponge" and address "Plankton way 22"
