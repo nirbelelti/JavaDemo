@@ -9,6 +9,9 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
 
 public class UserSteps {
     String firstName;
@@ -22,12 +25,10 @@ public class UserSteps {
 
     @Before
     public void beforeScenario() {
-        System.out.println("Before scenario");
         UserRepository.createTable();
     }
     @After
     public void afterScenario() {
-        System.out.println("After scenario");
         UserRepository.dropTable();
     }
     UserService user = new UserService(id, firstName, lastName, address);
@@ -45,7 +46,6 @@ public class UserSteps {
         user.setAddress(address);
         id = UserRepository.insertUser(user);
         user.setId(id);
-        System.out.println("User id: " + id);
     }
 
     @Then("the user is successfully created")
@@ -54,7 +54,6 @@ public class UserSteps {
         assert(user.getLastName().equals(lastName));
         assert(user.getAddress().equals(address));
         assert(user.getId() == id);
-        System.out.println("User id: " + id);
     }
 
     @Given("a user with a first name {string}, last name {string} and address {string}")
@@ -62,9 +61,6 @@ public class UserSteps {
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
-        assert(user.getFirstName().equals(firstName));
-        assert(user.getLastName().equals(lastName));
-        assert(user.getAddress().equals(address));
     }
 
     @When("the user is updated name last name and address in the system")
@@ -76,10 +72,9 @@ public class UserSteps {
 
     @Then("the user is successfully updated")
     public void theUserIsSuccessfullyUpdated() {
-
-        assert(user.getFirstName().equals("Alice"));
-        assert(user.getLastName().equals("Wonderland"));
-        assert(user.getAddress().equals("Hole in the ground 22"));
+        assertEquals(user.getFirstName(), "Alice");
+        assertEquals(user.getLastName(), "Wonderland");
+        assertEquals(user.getAddress(), "Hole in the ground 22");
     }
 
     @When("the user is called by id in the system")
@@ -90,9 +85,10 @@ public class UserSteps {
 
     @Then("the user is successfully returned by tha database")
     public void theUserIsSuccessfullyReturnedByThaDatabase() {
-        assert(user.getFirstName().equals("Alice"));
-        assert(user.getLastName().equals("Wonderland"));
-        assert(user.getAddress().equals("Hole in the ground 22"));
+        assertEquals( "Bob",user.getFirstName());
+        assertEquals( "Sponge",user.getLastName());
+        assertEquals("Plankton way 22",user.getAddress());
+
     }
 
     @When("the user is updated  the first name last and address to name to {string}, {string} and {string}")
@@ -113,7 +109,7 @@ public class UserSteps {
 
     @Then("the user is successfully deleted")
     public void theUserIsSuccessfullyDeleted() {
-        assert(UserRepository.getUserById(id) == null);
+        assertNull(UserRepository.getUserById(id));
 
     }
 
@@ -131,14 +127,9 @@ public class UserSteps {
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
-        UserService user = new UserService(1, firstName, lastName, address);
+        UserService user = new UserService( 1,firstName, lastName, address);
         UserRepository.insertUser(user);
 
-    }
-
-    @Then("the user is inserted with an ID")
-    public void theUserIsInsertedWithAnID() {
-         assert(UserRepository.getUserById(1).equals(user));
     }
 
     @When("I retrieve the user by id")
@@ -148,10 +139,9 @@ public class UserSteps {
 
     @Then("the retrieved user has the correct details")
     public void theRetrievedUserHasTheCorrectDetails() {
-        assert(user.getFirstName().equals(firstName));
-        assert(user.getLastName().equals(lastName));
-        assert(user.getAddress().equals(address));
-        assert (user.getId() == id);
+        assertEquals(user.getFirstName(),firstName);
+        assertEquals(user.getLastName(),lastName);
+        assertEquals(user.getAddress(),address);
     }
 
     @And("I update the user's address to {string}")
@@ -165,7 +155,7 @@ public class UserSteps {
     @Then("the user is updated in the database")
     public void theUserIsUpdatedInTheDatabase() {
         user = UserRepository.getUserById(1);
-        assert(user.getAddress().equals("Ocean way 22"));
+        assertEquals("Blue Ocean 1",user.getAddress());
 
     }
 

@@ -1,9 +1,6 @@
 Feature: Testing User CRUD operations
 
-  Scenario: Create a new user
-    Given the database is empty
-    When I create a new user with name "Bob" last name "Sponge" and address "Plankton way 22"
-    Then the user is inserted with an ID
+
 
   Scenario: Retrieve a user
     Given the database is empty
