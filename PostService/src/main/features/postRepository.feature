@@ -21,3 +21,9 @@ Feature: CRUD of posts in the repository
     When I create the post
     When I delete the post
     Then the post should be deleted from the repository
+
+  Scenario: get all posts by userId
+    Given I have a post with userId 1 title "My first post" and body "This is my first post"
+    When I create the post
+    When I request all posts by userId
+    Then the posts should be returned

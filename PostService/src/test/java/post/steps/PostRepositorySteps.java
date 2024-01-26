@@ -5,6 +5,8 @@ import io.cucumber.java.en.*;
 import post.Post;
 import post.PostRepository;
 
+import java.util.ArrayList;
+
 import static org.junit.Assert.assertEquals;
 
 public class PostRepositorySteps {
@@ -16,6 +18,8 @@ public class PostRepositorySteps {
     String body = "This is my first post";
 
     Post post = new Post(1,userId, title, body);
+    
+    ArrayList<Post> postList = new ArrayList<>();
 
     @After
     public void afterScenario() {
@@ -80,5 +84,17 @@ public class PostRepositorySteps {
     public void thePostShouldBeDeletedFromTheRepository() {
         post = PostRepository.getPostById(postId);
         assert(post == null);
+    }
+
+    @When("I request all posts by userId")
+    public void iRequestAllPostsByUserId() {
+        postList = PostRepository.getAllPostsByUserId(1);
+    }
+
+    @Then("the posts should be returned")
+    public void thePostsShouldBeReturned() {
+        assertEquals(postList.size(), 1);
+        assertEquals(postList.get(0).getUserId(), 1);
+        assertEquals(postList.get(0).getTitle(), "My first post");
     }
 }
