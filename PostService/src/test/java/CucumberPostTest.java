@@ -14,7 +14,7 @@ For example, the class name CucumberTestExample will be ignored by Maven.
         , publish= false
         , features = "src/main/features"  // directory of the feature files
         , snippets = SnippetType.CAMELCASE
-        ,glue = "user/steps"
+        ,glue = "post/steps"
 
 )
 public class CucumberPostTest {
