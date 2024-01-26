@@ -47,4 +47,21 @@ public class PostRepositorySteps {
         assertEquals(body, post.getBody());
         assertEquals(postId, post.getId());
     }
+
+    @When("I edit the post with userId {int} title {string} and body {string}")
+    public void iEditThePostWithUserIdTitleAndBody( int userId, String title, String body ) {
+        this.title ="My first post edited";
+        this.body =   "This is my first post edited";
+        post.setTitle(title);
+        post.setBody(body);
+        PostRepository.update(post);
+    }
+
+    @Then("the post should be updated in the repository")
+    public void thePostShouldBeUpdatedInTheRepository() {
+
+       post = PostRepository.getPostById(postId);
+        assertEquals(title, post.getTitle());
+        assertEquals(body, post.getBody());
+    }
 }
