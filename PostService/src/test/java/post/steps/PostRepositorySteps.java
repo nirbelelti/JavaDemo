@@ -12,7 +12,7 @@ public class PostRepositorySteps {
 
     int userId = 1;
     String title  = "My first post";
-    String content = "This is my first post";
+    String body = "This is my first post";
 
     Post post = new Post(1,userId, title, content);
 
@@ -44,7 +44,7 @@ public class PostRepositorySteps {
     public void thePostShouldBeReturned() {
         assertEquals(userId, post.getUserId());
         assertEquals(title, post.getTitle());
-        assertEquals(content, post.getBody());
+        assertEquals(body, post.getBody());
         assertEquals(postId, post.getId());
     }
 }
