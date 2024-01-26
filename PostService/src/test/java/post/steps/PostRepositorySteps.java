@@ -25,7 +25,7 @@ public class PostRepositorySteps {
 
     @When("I create the post")
     public void iCreateThePost() {
-       postId = PostRepository.insert(post);
+        postId = PostRepository.insert(post);
     }
 
 
