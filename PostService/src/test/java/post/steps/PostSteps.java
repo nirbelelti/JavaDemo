@@ -5,6 +5,7 @@ import post.Post;
 import static org.junit.Assert.assertEquals;
 
 public class PostSteps {
+   int id;
     int userId;
     String title;
     String body;

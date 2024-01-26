@@ -2,13 +2,23 @@ package post;
 
 public class Post {
     private int userId;
-    private String title;
-    private String content;
 
-    public Post(int userId, String title, String content) {
+    private int id;
+    private String title;
+    private String body;
+
+    public Post(int id, int userId, String title, String body) {
         this.userId = userId;
         this.title = title;
         this.body = body;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getUserId() {
