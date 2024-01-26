@@ -7,16 +7,16 @@ import static org.junit.Assert.assertEquals;
 public class PostSteps {
     int userId;
     String title;
-    String content;
+    String body;
 
-    Post post = new Post(userId, title, content);
+    Post post = new Post(id,userId, title, body);
 
 
-    @Given("a user with  parameters userId, title, content.")
-    public void aUserWithParametersUserIdTitleContent() {
+    @Given("a user with  parameters userId, title, body.")
+    public void aUserWithParametersUserIdTitleBody() {
         userId = 1;
         title = "title";
-        content = "content";
+        body = "body";
     }
 
     ;
@@ -25,14 +25,14 @@ public class PostSteps {
     public void thePostIsCreatedInTheSystem() {
         post.setUserId(userId);
         post.setTitle(title);
-        post.setContent(content);
+        post.setBody(body);
     }
 
     @Then("the post is successfully created")
     public void thePostIsSuccessfullyCreated() {
         assertEquals(userId, post.getUserId());
         assertEquals(title, post.getTitle());
-        assertEquals(content, post.getContent());
+        assertEquals(body, post.getBody());
     }
 }
 

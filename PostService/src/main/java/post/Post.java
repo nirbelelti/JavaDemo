@@ -8,7 +8,7 @@ public class Post {
     public Post(int userId, String title, String content) {
         this.userId = userId;
         this.title = title;
-        this.content = content;
+        this.body = body;
     }
 
     public int getUserId() {
@@ -25,11 +25,11 @@ public class Post {
     public void setTitle(String title) {
         this.title = title;
     }
-    public String getContent() {
-        return content;
+    public String getBody() {
+        return body;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setBody(String body) {
+        this.body = body;
     }
 }
