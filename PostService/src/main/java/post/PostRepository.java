@@ -129,7 +129,7 @@ public class PostRepository {
     public static ArrayList<Post> getAllPostsByUserId(int userId) {
         String sql = "SELECT * FROM post WHERE userId = ?";
 
-        ArrayList<Post> resault = new ArrayList<Post>();
+        ArrayList<Post> result = new ArrayList<>();
         try (Connection connection = DriverManager.getConnection(url);
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
@@ -142,16 +142,41 @@ public class PostRepository {
                 int userId1 = resultSet.getInt("userId");
                 String title = resultSet.getString("title");
                 String body= resultSet.getString("body");
-                resault.add(new Post(id, userId1,title, body));
+                result.add(new Post(id, userId1,title, body));
             }
 
-            return resault;
+            return result;
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
         System.out.println("Post not found");
+        return result;
+    }
 
-        return null;
+    public static ArrayList<Post> getAllPosts() {
+        String sql = "SELECT * FROM post";
+
+        ArrayList<Post> result = new ArrayList<>();
+        try (Connection connection = DriverManager.getConnection(url);
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                int userId1 = resultSet.getInt("userId");
+                String title = resultSet.getString("title");
+                String body= resultSet.getString("body");
+                result.add(new Post(id, userId1,title, body));
+            }
+
+            return result;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Post not found");
+        return result;
     }
 }

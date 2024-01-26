@@ -1,4 +1,5 @@
 Feature: CRUD of posts in the repository
+
   Scenario: Create a post
     Given I have a post with userId 1 title "My first post" and body "This is my first post"
     When I create the post
@@ -27,3 +28,10 @@ Feature: CRUD of posts in the repository
     When I create the post
     When I request all posts by userId
     Then the posts should be returned
+
+  Scenario: get all posts
+    Given I have a post with userId 1 title "My first post" and body "This is my first post"
+    And I create the post
+    And I create other post with userId 2 title "My second post" and body "This is my second post"
+    When I request all posts
+    Then all posts should be returned

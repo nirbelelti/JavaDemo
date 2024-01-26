@@ -97,4 +97,22 @@ public class PostRepositorySteps {
         assertEquals(postList.get(0).getUserId(), 1);
         assertEquals(postList.get(0).getTitle(), "My first post");
     }
+
+    @When("I request all posts")
+    public void iRequestAllPosts() {
+        postList = PostRepository.getAllPosts();
+    }
+
+    @Then("all posts should be returned")
+    public void allPostsShouldBeReturned() {
+        assertEquals(2, postList.size());
+        assertEquals(1, postList.get(0).getUserId());
+        assertEquals(2, postList.get(1).getUserId());
+    }
+
+    @And("I create other post with userId {int} title {string} and body {string}")
+    public void iCreateOtherPostWithUserIdTitleAndBody(int arg0, String arg1, String arg2) {
+        Post post = new Post(2, 2, "My second post", "This is my second post");
+        PostRepository.insert(post);
+    }
 }
