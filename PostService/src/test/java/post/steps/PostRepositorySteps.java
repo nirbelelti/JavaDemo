@@ -1,5 +1,6 @@
 package post.steps;
 
+import io.cucumber.java.After;
 import io.cucumber.java.en.*;
 import post.Post;
 import post.PostRepository;
@@ -68,5 +69,16 @@ public class PostRepositorySteps {
        post = PostRepository.getPostById(postId);
         assertEquals(title, post.getTitle());
         assertEquals(body, post.getBody());
+    }
+
+    @When("I delete the post")
+    public void iDeleteThePost() {
+        PostRepository.delete(post);
+    }
+
+    @Then("the post should be deleted from the repository")
+    public void thePostShouldBeDeletedFromTheRepository() {
+        post = PostRepository.getPostById(postId);
+        assert(post == null);
     }
 }

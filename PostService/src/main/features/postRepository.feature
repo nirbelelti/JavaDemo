@@ -15,3 +15,9 @@ Feature: CRUD of posts in the repository
     When I create the post
     When I edit the post with userId 1 title "My first post edited" and body "This is my first post edited"
     Then the post should be updated in the repository
+
+  Scenario: delete a post
+    Given I have a post with userId 1 title "My first post" and body "This is my first post"
+    When I create the post
+    When I delete the post
+    Then the post should be deleted from the repository
