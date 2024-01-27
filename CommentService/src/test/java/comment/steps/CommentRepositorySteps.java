@@ -6,6 +6,8 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
+import static org.junit.Assert.assertEquals;
+
 public class CommentRepositorySteps {
     int id, postId, userId;
     String body;
@@ -33,4 +35,16 @@ public class CommentRepositorySteps {
         assert(id >0);
     }
 
+    @When("I request to find the comment by id")
+    public void iRequestToFindTheCommentById() {
+        comment = CommentRepository.findById(id);
+    }
+
+    @Then("the comment is returned")
+    public void theCommentIsReturned() {
+        assertEquals(id, comment.getId());
+        assertEquals(body, comment.getBody());
+        assertEquals(postId, comment.getPostId());
+        assertEquals(userId, comment.getUserId());
+    }
 }
