@@ -18,7 +18,7 @@ public class CommentRepositorySteps {
     public void iHaveACommentWithOutIdAndWithPostIdUserIdAndBody(int postId, int userId, String body) {
         this.postId = 1;
         this.userId = 1;
-        this.body = "Comment body";
+        this.body = "Hello world I am a comment";
         comment.setId(id);
         comment.setBody(body);
         comment.setPostId(postId);

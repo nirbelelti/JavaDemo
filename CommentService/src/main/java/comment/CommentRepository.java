@@ -48,4 +48,28 @@ public class CommentRepository {
         return -1;
     }
 
+    public static Comment findById(int commentId) {
+        String sql = "SELECT * FROM comment WHERE id = ?";
+
+        try (Connection connection = DriverManager.getConnection(url);
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            preparedStatement.setInt(1, commentId);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                String body = resultSet.getString("body");
+                int postId = resultSet.getInt("post_id");
+                int userId = resultSet.getInt("user_id");
+                return new Comment(commentId, body, postId, userId);
+            }
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return null;
+    }
+
 }
