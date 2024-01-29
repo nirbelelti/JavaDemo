@@ -2,6 +2,7 @@ package comment.steps;
 
 import comment.Comment;
 import comment.CommentRepository;
+import io.cucumber.java.AfterAll;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -13,6 +14,11 @@ public class CommentRepositorySteps {
     int id, postId, userId;
     String body;
     Comment comment = new Comment(id, body, postId, userId);
+    @AfterAll
+        public static void after_all(){
+            CommentRepository.deleteAll();
+
+    }
 
 
     @Given("I have a comment without and postId {int} userId {int} and body   {string}")
@@ -85,7 +91,6 @@ public class CommentRepositorySteps {
 
     @Then("the comment is deleted")
     public void theCommentIsDeleted() {
-        comment = CommentRepository.findById(id);
-        assertNull(comment);
+        assertNull(CommentRepository.findById(id));
     }
 }

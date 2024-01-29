@@ -89,4 +89,33 @@ public class CommentRepository {
         }
     }
 
+    public static void delete(Comment comment) {
+        String sql = "DELETE FROM comment WHERE id = ?";
+
+        try (Connection connection = DriverManager.getConnection(url);
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setInt(1, comment.getId());
+
+            preparedStatement.executeUpdate();
+            System.out.println("Comment deleted");
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public static void deleteAll() {
+        String sql = "DELETE FROM comment";
+
+        try (Connection connection = DriverManager.getConnection(url);
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            preparedStatement.executeUpdate();
+            System.out.println("All comments deleted");
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
 }

@@ -25,7 +25,7 @@ Feature: Comment CRUD repository
     When I request to update the comment userId to 2 ad postId to 2
     Then the comment is not updated
 
-    Scenarion: Delete comment
+  Scenario: Delete comment
     Given I have a comment without and postId 1 userId 1 and body   "Hello world I am a comment"
     And I save the comment
     And I request to find the comment by id
