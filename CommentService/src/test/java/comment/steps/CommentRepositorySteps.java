@@ -128,4 +128,9 @@ public class CommentRepositorySteps {
     public void iRequestToFindAllCommentsByPostId(int arg0) {
         commentList = CommentRepository.findAllByPostId(1);
     }
+
+    @When("I request to find all comments by userId {int}")
+    public void iRequestToFindAllCommentsByUserId(int arg0) {
+        commentList = CommentRepository.findAllByUserId(1);
+    }
 }
