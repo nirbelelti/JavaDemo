@@ -118,4 +118,9 @@ public class CommentRepositorySteps {
     public void theCommentsAreReturned() {
         assertEquals(2, commentList.size());
     }
+
+    @Given("I have empty repository")
+    public void iHaveEmptyRepository() {
+        CommentRepository.deleteAll();
+    }
 }

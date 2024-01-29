@@ -33,7 +33,8 @@ Feature: Comment CRUD repository
     Then the comment is deleted
 
   Scenario: Find all comments
-    Given I have a comment without and postId 1 userId 1 and body   "Hello world I am a comment"
+    Given I have empty repository
+    And I have a comment without and postId 1 userId 1 and body   "Hello world I am a comment"
     And I save the comment
     And I have a another comment without and postId 1 userId 2 and body   "Hello I am also a comment"
     And I save the comment

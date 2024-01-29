@@ -1,6 +1,7 @@
 package comment;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 public class CommentRepository {
     public static String url = "jdbc:sqlite:commentdb.db";
@@ -116,6 +117,30 @@ public class CommentRepository {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    public static ArrayList<Comment> findAll() {
+        String sql = "SELECT * FROM comment";
+        ArrayList<Comment> comments = new ArrayList<>();
+
+        try (Connection connection = DriverManager.getConnection(url);
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String body = resultSet.getString("body");
+                int postId = resultSet.getInt("post_id");
+                int userId = resultSet.getInt("user_id");
+                comments.add(new Comment(id, body, postId, userId));
+            }
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return comments;
     }
 
 }
