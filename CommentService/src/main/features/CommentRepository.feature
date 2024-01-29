@@ -31,3 +31,11 @@ Feature: Comment CRUD repository
     And I request to find the comment by id
     When I request to delete the comment
     Then the comment is deleted
+
+  Scenario: Find all comments
+    Given I have a comment without and postId 1 userId 1 and body   "Hello world I am a comment"
+    And I save the comment
+    And I have a another comment without and postId 1 userId 2 and body   "Hello I am also a comment"
+    And I save the comment
+    When I request to find all comments
+    Then the comments are returned

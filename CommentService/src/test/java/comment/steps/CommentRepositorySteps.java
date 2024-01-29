@@ -3,9 +3,12 @@ package comment.steps;
 import comment.Comment;
 import comment.CommentRepository;
 import io.cucumber.java.AfterAll;
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+
+import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -14,6 +17,7 @@ public class CommentRepositorySteps {
     int id, postId, userId;
     String body;
     Comment comment = new Comment(id, body, postId, userId);
+    ArrayList<Comment> commentList = new ArrayList<>();
     @AfterAll
         public static void after_all(){
             CommentRepository.deleteAll();
@@ -92,5 +96,26 @@ public class CommentRepositorySteps {
     @Then("the comment is deleted")
     public void theCommentIsDeleted() {
         assertNull(CommentRepository.findById(id));
+    }
+
+    @And("I have a another comment without and postId {int} userId {int} and body   {string}")
+    public void iHaveAAnotherCommentWithoutAndPostIdUserIdAndBody(int userId, int postId, String body) {
+        this.postId = 2;
+        this.userId = 2;
+        this.body = "Hello world I am also a comment";
+        comment.setId(id);
+        comment.setBody(body);
+        comment.setPostId(postId);
+        comment.setUserId(userId);
+    }
+
+    @When("I request to find all comments")
+    public void iRequestToFindAllComments() {
+        commentList = CommentRepository.findAll();
+    }
+
+    @Then("the comments are returned")
+    public void theCommentsAreReturned() {
+        assertEquals(2, commentList.size());
     }
 }
