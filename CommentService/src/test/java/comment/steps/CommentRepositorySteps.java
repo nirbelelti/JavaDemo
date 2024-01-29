@@ -123,4 +123,9 @@ public class CommentRepositorySteps {
     public void iHaveEmptyRepository() {
         CommentRepository.deleteAll();
     }
+
+    @When("I request to find all comments by postId {int}")
+    public void iRequestToFindAllCommentsByPostId(int arg0) {
+        commentList = CommentRepository.findAllByPostId(1);
+    }
 }

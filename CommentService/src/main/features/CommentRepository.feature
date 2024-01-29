@@ -40,3 +40,12 @@ Feature: Comment CRUD repository
     And I save the comment
     When I request to find all comments
     Then the comments are returned
+
+    Scenario: Find all comments by postId
+    Given I have empty repository
+    And I have a comment without and postId 1 userId 1 and body   "Hello world I am a comment"
+    And I save the comment
+    And  I have a comment without and postId 1 userId 2 and body   "Hello world I am a comment"
+    And I save the comment
+    When I request to find all comments by postId 1
+    Then the comments are returned
