@@ -47,4 +47,33 @@ public class CommentRepositorySteps {
         assertEquals(postId, comment.getPostId());
         assertEquals(userId, comment.getUserId());
     }
+
+    @When("I request to update the comment body to {string}")
+    public void iRequestToUpdateTheCommentBodyTo(String newBody) {
+        newBody = "Hello world I am an updated comment";
+        comment.setBody(newBody);
+        CommentRepository.update(comment);
+    }
+
+    @Then("the comment is updated")
+    public void theCommentIsUpdated() {
+        comment = CommentRepository.findById(id);
+        assertEquals("Hello world I am an updated comment", comment.getBody());
+    }
+
+    @When("I request to update the comment userId to {int} ad postId to {int}")
+    public void iRequestToUpdateTheCommentUserIdToAdPostIdTo(int newUserId, int newPostId) {
+        newUserId = 222;
+        newPostId = 333;
+        comment.setUserId(newUserId);
+        comment.setPostId(newPostId);
+        CommentRepository.update(comment);
+    }
+
+    @Then("the comment is not updated")
+    public void theCommentIsNotUpdated() {
+        comment = CommentRepository.findById(id);
+        assertEquals(1, comment.getUserId());
+        assertEquals(1, comment.getPostId());
+    }
 }

@@ -72,4 +72,21 @@ public class CommentRepository {
         return null;
     }
 
+    public static void update(Comment comment) {
+        String sql = "UPDATE comment SET body = ? WHERE id = ?";
+
+        try (Connection connection = DriverManager.getConnection(url);
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            preparedStatement.setString(1, comment.getBody());
+            preparedStatement.setInt(2, comment.getId());
+
+            preparedStatement.executeUpdate();
+            System.out.println("Comment updated");
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
 }
