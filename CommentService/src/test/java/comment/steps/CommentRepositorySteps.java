@@ -7,6 +7,7 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class CommentRepositorySteps {
     int id, postId, userId;
@@ -75,5 +76,16 @@ public class CommentRepositorySteps {
         comment = CommentRepository.findById(id);
         assertEquals(1, comment.getUserId());
         assertEquals(1, comment.getPostId());
+    }
+
+    @When("I request to delete the comment")
+    public void iRequestToDeleteTheComment() {
+        CommentRepository.delete(comment);
+    }
+
+    @Then("the comment is deleted")
+    public void theCommentIsDeleted() {
+        comment = CommentRepository.findById(id);
+        assertNull(comment);
     }
 }
