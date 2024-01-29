@@ -143,4 +143,28 @@ public class CommentRepository {
         return comments;
     }
 
+    public static ArrayList<Comment> findAllByPostId(int postId) {
+        String sql = "SELECT * FROM comment WHERE post_id = ?";
+        ArrayList<Comment> comments = new ArrayList<>();
+
+        try (Connection connection = DriverManager.getConnection(url);
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setInt(1, postId);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String body = resultSet.getString("body");
+                int userId = resultSet.getInt("user_id");
+                comments.add(new Comment(id, body, postId, userId));
+            }
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return comments;
+    }
+
 }
