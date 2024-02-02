@@ -27,7 +27,7 @@ public class UserRepository {
         }
     }
 
-    public static int insertUser(UserService user) {
+    public static int insertUser(User user) {
         createTable();
         String sql = "INSERT INTO user (firstName,lastName, address) VALUES (?, ?,?)";
 
@@ -54,7 +54,7 @@ public class UserRepository {
         return -1;
     }
 
-    public static UserService getUserById(int userId) {
+    public static User getUserById(int userId) {
         String url = "jdbc:sqlite:userdb.db";
         String sql = "SELECT * FROM user WHERE id = ?";
 
@@ -69,7 +69,7 @@ public class UserRepository {
                 String firstName = resultSet.getString("firstName");
                 String lastName = resultSet.getString("lastName");
                 String address = resultSet.getString("address");
-                return new UserService(userId, firstName,lastName, address);
+                return new User(userId, firstName,lastName, address);
             }
 
         } catch (SQLException e) {
@@ -80,7 +80,7 @@ public class UserRepository {
         return null;
     }
 
-    public static void updateUser(UserService user) {
+    public static void updateUser(User user) {
         String sql = "UPDATE user SET firstName = ?, lastName = ?,address = ? WHERE id = ?";
 
         try (Connection connection = DriverManager.getConnection(url);
@@ -99,7 +99,7 @@ public class UserRepository {
         }
     }
 
-    public static void deleteUser(UserService user) {
+    public static void deleteUser(User user) {
         String sql = "DELETE FROM user WHERE id = ?";
 
         try (Connection connection = DriverManager.getConnection(url);

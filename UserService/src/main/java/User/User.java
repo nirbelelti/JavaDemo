@@ -1,6 +1,6 @@
 package User;
 
-public class UserService {
+public class User {
 
     private String firstName;
     private String lastName;
@@ -8,7 +8,7 @@ public class UserService {
 
     private int id;
 
-    public UserService(int id, String firstName, String lastName, String address) {
+    public User(int id, String firstName, String lastName, String address) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
