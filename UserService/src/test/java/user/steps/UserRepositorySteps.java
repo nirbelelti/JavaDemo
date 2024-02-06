@@ -1,11 +1,15 @@
 package user.steps;
 
-import User.User;
-import User.UserRepository;
+import gherkin.lexer.Ar;
+import user.User;
+import user.UserRepository;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
 
@@ -17,6 +21,8 @@ public class UserRepositorySteps {
     int id;
 
     User user = new User(id, firstName, lastName, address);
+
+    ArrayList<String> resultArray = new ArrayList<>();
 
     @Given("the database is empty")
     public void theDatabaseIsEmpty() {
@@ -69,7 +75,19 @@ public class UserRepositorySteps {
 
     @Then("the user is deleted from the database")
     public void theUserIsDeletedFromTheDatabase() {
+
         assert(UserRepository.getUserById(1) == null);
+        assertEquals(UserRepository.getAllUsers().size(),0);
     }
 
+    @When("I retrieve all users")
+    public void iRetrieveAllUsers() {
+        resultArray = UserRepository.getAllUsers();
+    }
+
+    @Then("the retrieved users are correct")
+    public void theRetrievedUsersAreCorrect() {
+        assertEquals(2,resultArray.size());
+        assertEquals("{id=1, firstName='Bob', lastName='Sponge', address='Plankton way 22'}"+"\n",resultArray.get(0) );
+    }
 }

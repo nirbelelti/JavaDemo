@@ -19,3 +19,10 @@ Feature: Testing User CRUD operations
     And I retrieve the user by id
     When I delete the user by passing the user object
     Then the user is deleted from the database
+
+    Scenario: Retrieve all users
+      Given the database is empty
+      And I create a new user with name "Bob" last name "Sponge" and address "Plankton way 22"
+      And I create a new user with name "Patrick" last name "Star" and address "Rock way 1"
+      When I retrieve all users
+      Then the retrieved users are correct

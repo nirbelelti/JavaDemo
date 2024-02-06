@@ -1,12 +1,14 @@
 package user.steps;
 
-import User.UserRepository;
-import User.UserFacade;
+import user.UserRepository;
+import user.UserFacade;
 import io.cucumber.java.AfterAll;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+
+import java.util.ArrayList;
 
 import static org.junit.Assert.*;
 
@@ -19,6 +21,7 @@ public class UserFacadeSteps {
 
     UserFacade operation = new UserFacade();
     UserRepository repository = new UserRepository();
+    ArrayList<String> resultArray = new ArrayList<>();
 
     @AfterAll
     public static void after_all() {
@@ -93,5 +96,15 @@ public class UserFacadeSteps {
     public void theUserObjectIsDeleted() {
         assertNull(repository.getUserById(1));
         assertTrue(processed);
+    }
+
+    @When("request to get all users is sent")
+    public void requestToGetAllUsersIsSent() {
+         resultArray = repository.getAllUsers();
+    }
+
+    @Then("the users array is returned")
+    public void theUsersArrayIsReturned() {
+        assert(!resultArray.isEmpty());
     }
 }

@@ -1,4 +1,5 @@
-package User;
+package user;
+import java.util.ArrayList;
 
 public class UserFacade {
     private User user;
@@ -48,4 +49,7 @@ public UserFacade() {
         }
     }
 
+    public ArrayList<String> allUsers() {
+        return UserRepository.getAllUsers();
+    }
 }

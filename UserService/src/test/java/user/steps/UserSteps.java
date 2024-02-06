@@ -1,10 +1,9 @@
 package user.steps;
 
-import User.UserRepository;
-import User.User;
+import user.UserRepository;
+import user.User;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
-import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -27,10 +26,10 @@ public class UserSteps {
     public void beforeScenario() {
         UserRepository.createTable();
     }
-    @After
-    public void afterScenario() {
-        UserRepository.dropTable();
-    }
+//    @After
+//    public void afterScenario() {
+//        UserRepository.dropTable();
+//    }
     User user = new User(id, firstName, lastName, address);
     @Given("a user with  parameters first name, last name and address.")
     public void aUserWithFirstNameLastNameAndAddress() {

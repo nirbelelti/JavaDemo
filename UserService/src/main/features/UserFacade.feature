@@ -26,3 +26,10 @@ Feature: User functions
     And the user is created
     When request to delete a user with the following user id 1 is sent
     Then the user object is deleted
+
+      Scenario: Get all users
+    Given request to create a user with the following data parameters "Bob","Sponge","Plankton way 22"
+    And the request to created user is sent
+    And the user is created
+    When request to get all users is sent
+    Then the users array is returned

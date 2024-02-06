@@ -1,7 +1,7 @@
-package User;//package Person;
-
+package user;//package Person;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 
 public class UserRepository {
@@ -55,7 +55,6 @@ public class UserRepository {
     }
 
     public static User getUserById(int userId) {
-        String url = "jdbc:sqlite:userdb.db";
         String sql = "SELECT * FROM user WHERE id = ?";
 
         try (Connection connection = DriverManager.getConnection(url);
@@ -69,7 +68,7 @@ public class UserRepository {
                 String firstName = resultSet.getString("firstName");
                 String lastName = resultSet.getString("lastName");
                 String address = resultSet.getString("address");
-                return new User(userId, firstName,lastName, address);
+                return new User(userId, firstName, lastName, address);
             }
 
         } catch (SQLException e) {
@@ -126,5 +125,36 @@ public class UserRepository {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public static ArrayList<String> getAllUsers() {
+        String sql = "SELECT * FROM user";
+        String user = "";
+        ArrayList<String> result = new ArrayList<>();
+        try (Connection connection = DriverManager.getConnection(url);
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String firstName = resultSet.getString("firstName");
+                String lastName = resultSet.getString("lastName");
+                String address = resultSet.getString("address");
+                user = "{" +
+                        "id=" + id +
+                        ", firstName='" + firstName + '\'' +
+                        ", lastName='" + lastName + '\'' +
+                        ", address='" + address + '\'' +
+                        '}' + "\n";
+                result.add(user);
+            }
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+        return result;
     }
 }
