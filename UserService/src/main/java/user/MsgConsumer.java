@@ -3,19 +3,17 @@ package user;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.client.*;
-import org.rabbitmq.RabbitMQUtils;
 
+import java.nio.charset.StandardCharsets;
+
+import org.rabbitmq.RabbitMQUtils;
 
 public class MsgConsumer {
     private final static String QUEUE_NAME = "createUserQueue";
     private static final ObjectMapper objectMapper = new ObjectMapper();
-    static UserFacade facade = new UserFacade();
-
+    private static UserFacade facade = new UserFacade();
 
     public static void main(String[] args) {
-
-
-
         try {
             // Establish a connection to RabbitMQ server
             Connection connection = RabbitMQUtils.getConnection();
@@ -28,16 +26,28 @@ public class MsgConsumer {
 
             // Create a consumer and specify the callback to handle incoming messages
             DeliverCallback deliverCallback = (consumerTag, delivery) -> {
-                String message = new String(delivery.getBody(), "UTF-8");
-                System.out.println(" [x] Received here '" + message + "'");
-               //User user = objectMapper.readValue(delivery.getBody(), User.class);
-                //System.out.println("Received user details: " + user.getFirstName() + " " + user.getLastName() + ", Address: " + user.getAddress());
+                String message = new String(delivery.getBody(), StandardCharsets.UTF_8);
+                System.out.println(" [x] Received '" + message + "'");
 
-
+                // Extract data from the message
                 JsonNode jsonNode = objectMapper.readTree(message);
-                facade.createUser(jsonNode.get("firstName").asText(), jsonNode.get("lastName").asText(), jsonNode.get("address").asText());
+                String firstName = jsonNode.get("firstName").asText();
+                String lastName = jsonNode.get("lastName").asText();
+                String address = jsonNode.get("address").asText();
 
-                System.out.println(" [x] Received dddddd '" + message + "'");
+                // Process the data
+                int userId = facade.createUser(firstName, lastName, address);
+                User user = new User(userId, firstName, lastName, address);
+                String responseMessage = user.toString();
+
+                // Send the response back to the sender using the replyTo and correlationId
+                AMQP.BasicProperties properties = new AMQP.BasicProperties.Builder()
+                        .correlationId(delivery.getProperties().getCorrelationId())
+                        .build();
+
+                channel.basicPublish("", delivery.getProperties().getReplyTo(), properties, responseMessage.getBytes(StandardCharsets.UTF_8));
+
+                System.out.println(" [x] Response sent: '" + responseMessage + "'");
             };
 
             // Consume messages from the queue
