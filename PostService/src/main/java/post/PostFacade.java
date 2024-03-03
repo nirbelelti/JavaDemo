@@ -39,7 +39,6 @@ public class PostFacade {
     }
 
     public boolean deletePost(int i) {
-        System.out.println("Hej" +i);
         post = PostRepository.getPostById(i);
         try {
             PostRepository.delete(post);
@@ -49,7 +48,12 @@ public class PostFacade {
         }
     }
 
-//    public ArrayList<String> allPosts() {
-//        return PostRepository.getAllPosts();
-//    }
+    public ArrayList<Post> allPosts() {
+        return PostRepository.getAllPosts();
+    }
+
+
+    public ArrayList<Post> getAllPostsByUser(int userId) {
+        return PostRepository.getAllPostsByUserId(userId);
+    }
 }

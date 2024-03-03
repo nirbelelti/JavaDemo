@@ -61,13 +61,12 @@ public class PostRepository {
 
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            if (resultSet.next()) {
+            while (resultSet.next()) {
                 int id = resultSet.getInt("id");
                 int userId = resultSet.getInt("userId");
                 String title = resultSet.getString("title");
-                String body= resultSet.getString("body");
-                System.out.println("Post found id: " + id +" "+ userId +" "+ title +", "+ body);
-                return new Post(id, userId,title, body);
+                String body = resultSet.getString("body");
+                return new Post(id, userId, title, body);
             }
 
         } catch (SQLException e) {
@@ -137,12 +136,12 @@ public class PostRepository {
 
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            if (resultSet.next()) {
+            while (resultSet.next()) {
                 int id = resultSet.getInt("id");
                 int userId1 = resultSet.getInt("userId");
                 String title = resultSet.getString("title");
-                String body= resultSet.getString("body");
-                result.add(new Post(id, userId1,title, body));
+                String body = resultSet.getString("body");
+                result.add(new Post(id, userId1, title, body));
             }
 
             return result;
@@ -167,16 +166,17 @@ public class PostRepository {
                 int id = resultSet.getInt("id");
                 int userId1 = resultSet.getInt("userId");
                 String title = resultSet.getString("title");
-                String body= resultSet.getString("body");
-                result.add(new Post(id, userId1,title, body));
+                String body = resultSet.getString("body");
+                Post post = new Post(id, userId1, title, body);
+                result.add(post);
             }
 
             return result;
 
         } catch (SQLException e) {
             e.printStackTrace();
+            return result;
         }
-        System.out.println("Post not found");
-        return result;
     }
+
 }
