@@ -13,14 +13,12 @@ public class PostSteps {
     Post post = new Post(id,userId, title, body);
 
 
-    @Given("a user with  parameters userId, title, body.")
-    public void aUserWithParametersUserIdTitleBody() {
+    @Given("a user with  parameters userId, title, content.")
+    public void aUserWithParametersUserIdTitleContent() {
         userId = 1;
         title = "title";
         body = "body";
     }
-
-    ;
 
     @When("^the post is created in the system")
     public void thePostIsCreatedInTheSystem() {
@@ -35,5 +33,6 @@ public class PostSteps {
         assertEquals(title, post.getTitle());
         assertEquals(body, post.getBody());
     }
+
 }
 
