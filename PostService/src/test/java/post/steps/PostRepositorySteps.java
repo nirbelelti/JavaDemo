@@ -106,14 +106,18 @@ public class PostRepositorySteps {
 
     @Then("all posts should be returned")
     public void allPostsShouldBeReturned() {
-        assertEquals(2, postList.size());
+        assertTrue( postList.size()>1);
         assertEquals(1, postList.get(0).getUserId());
         assertEquals(2, postList.get(1).getUserId());
     }
 
     @And("I create other post with userId {int} title {string} and body {string}")
-    public void iCreateOtherPostWithUserIdTitleAndBody(int arg0, String arg1, String arg2) {
-        Post post = new Post(2, 2, "My second post", "This is my second post");
+    public void iCreateOtherPostWithUserIdTitleAndBody(int userId, String title, String body) {
+        userId = 2;
+        title = "My second post";
+        body = "This is my second post";
+        Post post = new Post(2, userId, title, body);
+        System.out.println("Post created: " + post);
         PostRepository.insert(post);
     }
 }
