@@ -4,7 +4,7 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class PostRepository {
-    static String url = "jdbc:sqlite:postdb.db";
+    static String url = "jdbc:sqlite:PostDB.db";
 
     public static void createTable() {
 
