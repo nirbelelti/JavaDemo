@@ -1,4 +1,7 @@
-package User;
+package user;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class User {
 
@@ -10,6 +13,16 @@ public class User {
 
     public User(int id, String firstName, String lastName, String address) {
         this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.address = address;
+    }
+    // Additional constructor without id parameter
+    @JsonCreator
+    public User(
+            @JsonProperty("firstName") String firstName,
+            @JsonProperty("lastName") String lastName,
+            @JsonProperty("address") String address) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
