@@ -8,6 +8,7 @@ import post.PostRepository;
 import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class PostRepositorySteps {
 
@@ -22,7 +23,7 @@ public class PostRepositorySteps {
     ArrayList<Post> postList = new ArrayList<>();
 
     @After
-    public void afterScenario() {
+    public static void afterAll() {
         PostRepository.dropTable();
     }
 
