@@ -1,6 +1,5 @@
 package post.steps;
 
-import io.cucumber.java.AfterAll;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -14,12 +13,7 @@ import java.util.ArrayList;
 
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertTrue;
-import io.cucumber.java.AfterAll;
-import io.cucumber.java.en.And;
-import io.cucumber.java.en.Given;
-import io.cucumber.java.en.Then;
-import io.cucumber.java.en.When;
-import java.util.ArrayList;
+
 public class PoseFacadeSteps {
 
     int id, userId;
@@ -30,10 +24,10 @@ public class PoseFacadeSteps {
     PostRepository repository = new PostRepository();
     ArrayList<Post> resultArray = new ArrayList<>();
 
-    @AfterAll
-    public static void after_all() {
-        PostRepository.dropTable();
-    }
+//    @AfterAll
+//    public static void after_all() {
+//        PostRepository.dropTable();
+//    }
 
     @Given("request to create a post with the following data parameters userId {int},{string},{string}")
         public void requestToCreateAPostWithTheFollowingDataParametersUserId(int arg0, String arg1, String arg2) {
@@ -115,4 +109,9 @@ public class PoseFacadeSteps {
         assert(!resultArray.isEmpty());
     }
 
+    @When("request to get all posts by user with the following user id {int} is sent")
+    public void requestToGetAllPostsByUserWithTheFollowingUserIdIsSent(int userId) {
+        userId = 1;
+        resultArray = repository.getAllPostsByUserId(userId);
+    }
 }
