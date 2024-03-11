@@ -4,17 +4,16 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class CommentRepository {
-    public static String url = "jdbc:sqlite:commentdb.db";
+    public static String url = "jdbc:sqlite:commentDB.db";
 
     public static void createTable() {
-
         try (Connection connection = DriverManager.getConnection(url);
              Statement statement = connection.createStatement()) {
             String sql = "CREATE TABLE IF NOT EXISTS comment ("
                     + "	id integer PRIMARY KEY,"
                     + "	body text NOT NULL,"
-                    + "	post_id integer NOT NULL,"
-                    + "	user_id integer NOT NULL"
+                    + "	postId integer NOT NULL,"
+                    + "	userId integer NOT NULL"
                     + ")";
                statement.executeUpdate(sql);
         } catch (SQLException e) {
@@ -24,7 +23,7 @@ public class CommentRepository {
 
     public static int insert(Comment comment) {
         createTable();
-        String sql = "INSERT INTO comment (body, post_id, user_id) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO comment (body, postId, userId) VALUES (?, ?, ?)";
 
         try (Connection connection = DriverManager.getConnection(url);
              PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -61,8 +60,8 @@ public class CommentRepository {
 
             if (resultSet.next()) {
                 String body = resultSet.getString("body");
-                int postId = resultSet.getInt("post_id");
-                int userId = resultSet.getInt("user_id");
+                int postId = resultSet.getInt("postId");
+                int userId = resultSet.getInt("userId");
                 return new Comment(commentId, body, postId, userId);
             }
 
@@ -131,8 +130,8 @@ public class CommentRepository {
             while (resultSet.next()) {
                 int id = resultSet.getInt("id");
                 String body = resultSet.getString("body");
-                int postId = resultSet.getInt("post_id");
-                int userId = resultSet.getInt("user_id");
+                int postId = resultSet.getInt("postId");
+                int userId = resultSet.getInt("userId");
                 comments.add(new Comment(id, body, postId, userId));
             }
 
@@ -144,7 +143,7 @@ public class CommentRepository {
     }
 
     public static ArrayList<Comment> findAllByPostId(int postId) {
-        String sql = "SELECT * FROM comment WHERE post_id = ?";
+        String sql = "SELECT * FROM comment WHERE postId = ?";
         ArrayList<Comment> comments = new ArrayList<>();
 
         try (Connection connection = DriverManager.getConnection(url);
@@ -156,7 +155,7 @@ public class CommentRepository {
             while (resultSet.next()) {
                 int id = resultSet.getInt("id");
                 String body = resultSet.getString("body");
-                int userId = resultSet.getInt("user_id");
+                int userId = resultSet.getInt("userId");
                 comments.add(new Comment(id, body, postId, userId));
             }
 
@@ -168,7 +167,7 @@ public class CommentRepository {
     }
 
     public static ArrayList<Comment> findAllByUserId(int userId) {
-        String sql = "SELECT * FROM comment WHERE user_id = ?";
+        String sql = "SELECT * FROM comment WHERE userId = ?";
         ArrayList<Comment> comments = new ArrayList<>();
 
         try (Connection connection = DriverManager.getConnection(url);
@@ -180,7 +179,7 @@ public class CommentRepository {
             while (resultSet.next()) {
                 int id = resultSet.getInt("id");
                 String body = resultSet.getString("body");
-                int postId = resultSet.getInt("post_id");
+                int postId = resultSet.getInt("postId");
                 comments.add(new Comment(id, body, postId, userId));
             }
 
