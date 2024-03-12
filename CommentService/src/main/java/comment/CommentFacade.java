@@ -1,6 +1,5 @@
 package comment;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class CommentFacade {
@@ -24,12 +23,14 @@ public class CommentFacade {
         return CommentRepository.findAllByPostId(i);
     }
 
-    public void updateComment(Comment comment) {
+    public Comment updateComment(Comment comment) {
         CommentRepository.update(comment);
+        return comment;
     }
 
-    public void deleteComment(int i) {
+    public boolean deleteComment(int i) {
         comment= CommentRepository.findById(i);
         CommentRepository.delete(comment);
+        return false;
     }
 }
