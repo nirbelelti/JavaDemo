@@ -1,4 +1,4 @@
-package rest;
+package rest.adapters;
 
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
