@@ -1,21 +1,13 @@
 package rest;
 
-import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.MediaType;
-//import post.Post;
-import user.User;
-import jakarta.ws.rs.core.Response;
-import org.rabbitmq.SenderWithResponse;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.QueryParam;
 import org.rabbitmq.GenericReceiver;
+import org.rabbitmq.SenderWithResponse;
+import user.User;
 
-import java.lang.reflect.Array;
-//
-//import java.io.IOException;
-//import java.util.concurrent.TimeoutException;
+public class UserResourceService {
 
-
-@Path("/users")
-public class UserResource {
     SenderWithResponse allUsersSender = new SenderWithResponse("getAllUsersQueue", "allUserReplyQueue");
 
     SenderWithResponse userSender = new SenderWithResponse("createUserQueue", "createUserReplyQueue");
@@ -31,9 +23,13 @@ public class UserResource {
     GenericReceiver updateUserReceiver = new GenericReceiver("updateUserReplyQueue");
     GenericReceiver deleteUserReceiver = new GenericReceiver("deleteUserReplyQueue");
 
+    private UserResourceService() {
+    }
 
-    @GET
-    @Produces(MediaType.TEXT_PLAIN)
+    public static UserResourceService getInstance() {
+        return new UserResourceService();
+    }
+
     public String getUsers() {
         allUsersReceiver.start();
         allUsersSender.sendMessage("Get all users");
@@ -43,10 +39,8 @@ public class UserResource {
         }
         return "No users Found";
     }
-    @Path("/{id}")
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public String getUser(@PathParam("id") String id) {
+
+    public String getUser(int id) {
         userReceiver.start();
 
         String userMessage = String.format( "{ \"id\" : \"%s\" }", id);
@@ -56,14 +50,14 @@ public class UserResource {
         if (receivedMessage != null && !receivedMessage.isEmpty()) {
             // Use the received message instead of the fixed string
             return receivedMessage;
+
         }
 
         // Fallback to a default message if the received message is not available
         return "Default response if no message received";
     }
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    public String createUser(@QueryParam("firstName") String firstName, @QueryParam("lastName") String lastName, @QueryParam("address") String address){
+
+    public String createUser(String firstName, String lastName,String address){
         userCreateReceiver.start();
         //  String userMessage =  "{ \"color\" : \"Black\", \"type\" : \"FIAT\" }";
         String userMessage = String.format( "{ \"firstName\" : \"%s\", \"lastName\" : \"%s\", \"address\" : \"%s\" }", firstName, lastName, address);
@@ -79,10 +73,8 @@ public class UserResource {
         // Fallback to a default message if the received message is not available
         return "Default response if no message received";
     }
-    @Path("/{id}")
-    @PUT
-    @Consumes(MediaType.APPLICATION_JSON)
-    public String updateUser(@PathParam("id") String id, @QueryParam("firstName") String firstName, @QueryParam("lastName") String lastName, @QueryParam("address") String address){
+
+    public String updateUser(int id, String firstName,  String lastName,  String address){
         System.out.println("UserResource.updateUser: "+id );
         System.out.println("UserResource.updateUser: "+firstName );
         System.out.println("UserResource.updateUser: "+lastName );
@@ -99,12 +91,10 @@ public class UserResource {
 
         return "Something went wrong, try again later.";
     }
-    @Path("/{id}")
-    @DELETE
-    @Consumes(MediaType.APPLICATION_JSON)
-    public String deleteUser(@PathParam("id") String id){
+
+    public String deleteUser(int id){
         deleteUserReceiver.start();
-        deleteUserSender.sendMessage(id);
+        deleteUserSender.sendMessage(String.valueOf(id));
         String receivedMessage = deleteUserReceiver.getReceivedMessage();
         if (receivedMessage != null && !receivedMessage.isEmpty()) {
             // Use the received message instead of the fixed string
@@ -112,4 +102,5 @@ public class UserResource {
         }
         return "Something went wrong, try again later.";
     }
+
 }

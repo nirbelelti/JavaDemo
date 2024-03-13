@@ -20,10 +20,10 @@ public UserFacade() {
     }
 
 
-    public String getUser(int i) {
+    public User getUser(int i) {
     System.out.println("Hej" +i);
-    user = UserRepository.getUserById(i);
-    return user.toString();
+
+    return UserRepository.getUserById(i);
     }
 
     public boolean updateUser(int id, String firstName, String lastName, String address) {
