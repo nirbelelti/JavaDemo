@@ -6,9 +6,9 @@ import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.DeliverCallback;
-import org.rabbitmq.RabbitMQUtils;
+import post.config.GenericReceiver;
+import post.config.RabbitMQUtils;
 
-import java.lang.reflect.Array;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
@@ -107,7 +107,7 @@ public class MsgConsumer {
         }
     }
 
-    public void getPostStart() {
+    public synchronized void getPostStart() {
         try {
             Connection connection = RabbitMQUtils.getConnection();
             Channel channel = connection.createChannel();
@@ -253,7 +253,10 @@ public class MsgConsumer {
         }
     }
 
-    public static void main(String[] args) {
+    public  static void main(String[] args) {
+        GenericReceiver postReceiver = new GenericReceiver("post-queue");
+        postReceiver.start();
+
         MsgConsumer consumer = new MsgConsumer();
         consumer.createPostStart();
         consumer.getPostStart();
