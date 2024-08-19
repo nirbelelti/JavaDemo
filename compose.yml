@@ -8,19 +8,25 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest
+
   restservice:
     build:
       context: ./RestService
       dockerfile: Dockerfile
     ports:
         - "8080:8080"
+    environment:
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USER: guest
+      RABBITMQ_PASSWORD: guest
+    depends_on:
+       - rabbitmq
 
   postservice:
     build:
         context: ./PostService
         dockerfile: Dockerfile
-    ports:
-      - "8081:8081"
     environment:
       RABBITMQ_HOST: rabbitmq
       RABBITMQ_PORT: 5672
@@ -28,13 +34,12 @@ services:
       RABBITMQ_PASSWORD: guest
     depends_on:
       - rabbitmq
+    restart: always
 
   commentservice:
     build:
       context: ./CommentService
       dockerfile: Dockerfile
-    ports:
-      - "8082:8082"
     environment:
       RABBITMQ_HOST: rabbitmq
       RABBITMQ_PORT: 5672
@@ -42,3 +47,17 @@ services:
       RABBITMQ_PASSWORD: guest
     depends_on:
       - rabbitmq
+    restart: always
+
+  userservice:
+    build:
+      context: ./UserService
+      dockerfile: Dockerfile
+    environment:
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USER: guest
+      RABBITMQ_PASSWORD: guest
+    depends_on:
+      - rabbitmq
+    restart: always
