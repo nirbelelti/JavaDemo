@@ -56,7 +56,7 @@ public class UserFacadeSteps {
     @When("request to get a user with the following user id {int} is sent")
     public void requestToGetAUserWithTheFollowingUserIdIsSent(int id) {
         this.id = 1;
-       userJson = operation.getUser(id);
+       userJson = operation.getUser(id).toString();
     }
 
     @Then("the user object is returned")
@@ -69,8 +69,8 @@ public class UserFacadeSteps {
                 '}');
     }
 
-    @When("request to update a user with the following data parametersuser id {int} {string},{string},{string} is sent")
-    public void requestToUpdateAUserWithTheFollowingDataParametersuserIdIsSent(int id, String firstName, String lastName, String address) {
+    @When("request to update a user with the following data parameters user id {int} {string},{string},{string} is sent")
+    public void requestToUpdateAUserWithTheFollowingDataParametersUserIdIsSent(int id, String firstName, String lastName, String address) {
         this.id = 1;
         this.firstName = "Alice";
         this.lastName = "Wonderland";

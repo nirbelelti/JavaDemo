@@ -1,14 +1,14 @@
-package org.rabbitmq;
+package config.rabbitmq;
 
-import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.Connection;
 
-public class UserMsgSender {
+public class Sender {
 
-    private final static String QUEUE_NAME = "createUserQueue";
+    private final static String QUEUE_NAME = "hello";
 
 
-    public String creatUser(String message) {
+    public static void main(String[] args) {
         try {
             // Establish a connection to RabbitMQ server
             Connection connection = RabbitMQUtils.getConnection();
@@ -19,6 +19,9 @@ public class UserMsgSender {
             // Declare a queue (creates the queue if not exists)
             channel.queueDeclare(QUEUE_NAME, false, false, false, null);
 
+            // Message to be sent
+            String message = "Hello, RabbitMQ!" + System.currentTimeMillis();
+
             // Publish the message to the queue
             channel.basicPublish("", QUEUE_NAME, null, message.getBytes());
             System.out.println(" [x] Sent '" + message + "'");
@@ -26,10 +29,8 @@ public class UserMsgSender {
             // Close the channel and connection
             channel.close();
             connection.close();
-            return message;
         } catch (Exception e) {
             e.printStackTrace();
-            return "Error";
         }
     }
 }

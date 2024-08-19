@@ -6,7 +6,7 @@ import com.rabbitmq.client.*;
 
 import java.nio.charset.StandardCharsets;
 
-import org.rabbitmq.RabbitMQUtils;
+import user.config.RabbitMQUtils;
 
 public class MsgConsumer {
     private final static String CREATE_USER_QUEUE = "createUserQueue";
@@ -105,13 +105,14 @@ public class MsgConsumer {
                 JsonNode jsonNode = objectMapper.readTree(message);
                 int id = jsonNode.get("id").asInt();
 
-                String user = facade.getUser(id);
+               User user = facade.getUser(id);
+               String resault = user.toString();
 
                 AMQP.BasicProperties properties = new AMQP.BasicProperties.Builder()
                         .correlationId(delivery.getProperties().getCorrelationId())
                         .build();
 
-                channel.basicPublish("", delivery.getProperties().getReplyTo(), properties, user.getBytes(StandardCharsets.UTF_8));
+                channel.basicPublish("", delivery.getProperties().getReplyTo(), properties, resault.getBytes(StandardCharsets.UTF_8));
             };
 
             channel.basicConsume(GET_USER_QUEUE, true, deliverCallback, consumerTag -> {

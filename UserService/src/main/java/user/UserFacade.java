@@ -21,8 +21,6 @@ public UserFacade() {
 
 
     public User getUser(int i) {
-    System.out.println("Hej" +i);
-
     return UserRepository.getUserById(i);
     }
 
