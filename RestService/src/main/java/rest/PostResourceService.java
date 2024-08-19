@@ -1,9 +1,10 @@
 package rest;
 
 import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.QueryParam;
-import org.rabbitmq.GenericReceiver;
-import org.rabbitmq.SenderWithResponse;
+import config.rabbitmq.GenericReceiver;
+import config.rabbitmq.SenderWithResponse;
+
+import java.util.ArrayList;
 
 public class PostResourceService {
 
@@ -23,6 +24,8 @@ public class PostResourceService {
 
     GenericReceiver postByUserReceiver = new GenericReceiver("getPostByUserReplyQueue");
 
+    ArrayList<String> resault = new ArrayList();
+
     private PostResourceService() {
     }
     public static PostResourceService getInstance() {
@@ -38,7 +41,7 @@ public class PostResourceService {
             return receivedMessage;
         }
         System.out.println(allPostsReceiver.getReceivedMessage());
-        return receivedMessage;
+        return receivedMessage + "Something went wrong, try again later.";
     }
 
     public String getPost(@PathParam("id") String id) {
@@ -113,6 +116,32 @@ public class PostResourceService {
 
         // Fallback to a default message if the received message is not available
         return "Default response if no message received";
+    }
+
+    public synchronized String getPostAndComments(int id) {
+        String post = getPost(String.valueOf(id));
+        String comments = CommentResourceService.getInstance().getCommentsByPost(id);
+        while (comments==null) {
+            try {
+                Thread.sleep(1000);
+                System.out.println("Waiting for comments..." + comments);
+                if (comments !=null) {
+                    System.out.println("Comments: " + comments);
+                    break;
+                }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+
+        String response = "";
+        String[] parts = post.split("}");
+        response += parts[0];
+        response += ", \"comments\": ";
+        response += comments;
+        response += "}";
+
+        return response;
     }
 
 }
