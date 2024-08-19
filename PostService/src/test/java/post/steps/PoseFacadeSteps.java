@@ -62,11 +62,11 @@ public class PoseFacadeSteps {
 
     @Then("the post object is returned")
     public void thePostObjectIsReturned() {
-        assertEquals("Post={" +
-                "id=" + id +
-                ", userId='" + userId + '\'' +
-                ", title='" + title + '\'' +
-                ", body='" + body + '\'' +
+        assertEquals( "{" +
+                "\"id\": " + id +
+                ", \"userId\": " + userId +
+                ", \"title\": " + title + '\'' +
+                ", \"body\": " + body + '\'' +
                 '}', PostJson);
     }
 
