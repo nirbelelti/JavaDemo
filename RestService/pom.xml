@@ -47,27 +47,27 @@
             <artifactId>rest-assured</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>post</groupId>
-            <artifactId>postservice</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>comment</groupId>
-            <artifactId>CommentService</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>rabbitmq</groupId>
-            <artifactId>RBMQservice</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>userservice</groupId>
-            <artifactId>UserService</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
+<!--        <dependency>-->
+<!--            <groupId>post</groupId>-->
+<!--            <artifactId>postservice</artifactId>-->
+<!--            <version>1.0-SNAPSHOT</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>comment</groupId>-->
+<!--            <artifactId>CommentService</artifactId>-->
+<!--            <version>1.0-SNAPSHOT</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>rabbitmq</groupId>-->
+<!--            <artifactId>RBMQservice</artifactId>-->
+<!--            <version>1.0-SNAPSHOT</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>userservice</groupId>-->
+<!--            <artifactId>UserService</artifactId>-->
+<!--            <version>1.0-SNAPSHOT</version>-->
+<!--        </dependency>-->
+       <dependency>
             <groupId>io.cucumber</groupId>
             <artifactId>cucumber-java</artifactId>
             <version>7.15.0</version>
@@ -78,6 +78,12 @@
             <artifactId>junit</artifactId>
             <version>4.13.2</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.rabbitmq</groupId>
+            <artifactId>amqp-client</artifactId>
+            <version>5.20.0</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
     <build>
@@ -106,16 +112,16 @@
                     </compilerArgs>
                 </configuration>
             </plugin>
-            <plugin>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>${surefire-plugin.version}</version>
-                <configuration>
-                    <systemPropertyVariables>
-                        <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
-                        <maven.home>${maven.home}</maven.home>
-                    </systemPropertyVariables>
-                </configuration>
-            </plugin>
+<!--            <plugin>-->
+<!--                <artifactId>maven-surefire-plugin</artifactId>-->
+<!--                <version>${surefire-plugin.version}</version>-->
+<!--                <configuration>-->
+<!--                    <systemPropertyVariables>-->
+<!--                        <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>-->
+<!--                        <maven.home>${maven.home}</maven.home>-->
+<!--                    </systemPropertyVariables>-->
+<!--                </configuration>-->
+<!--            </plugin>-->
             <plugin>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>${surefire-plugin.version}</version>
@@ -128,12 +134,12 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <systemPropertyVariables>
-                        <native.image.path>${project.build.directory}/${project.build.finalName}-runner
-                        </native.image.path>
-                        <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
-                        <maven.home>${maven.home}</maven.home>
-                    </systemPropertyVariables>
+<!--                    <systemPropertyVariables>-->
+<!--                        <native.image.path>${project.build.directory}/${project.build.finalName}-runner-->
+<!--                        </native.image.path>-->
+<!--                        <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>-->
+<!--                        <maven.home>${maven.home}</maven.home>-->
+<!--                    </systemPropertyVariables>-->
                 </configuration>
             </plugin>
         </plugins>
