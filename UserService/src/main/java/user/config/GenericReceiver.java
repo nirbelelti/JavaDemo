@@ -1,4 +1,4 @@
-package post.config;
+package user.config;
 
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
@@ -8,7 +8,7 @@ public class GenericReceiver {
 
     private final String queueName;
 
-    public GenericReceiver(String queueName ) {
+    public GenericReceiver(String queueName) {
         this.queueName = queueName;
     }
 
@@ -34,12 +34,12 @@ public class GenericReceiver {
             };
 
             // Consume messages from the queue
-            channel.basicConsume(queueName, true, deliverCallback, consumerTag -> {});
+            channel.basicConsume(queueName, true, deliverCallback, consumerTag -> {
+            });
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
 }
 
