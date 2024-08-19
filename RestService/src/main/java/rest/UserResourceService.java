@@ -2,9 +2,9 @@ package rest;
 
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.QueryParam;
-import org.rabbitmq.GenericReceiver;
-import org.rabbitmq.SenderWithResponse;
-import user.User;
+import config.rabbitmq.GenericReceiver;
+import config.rabbitmq.SenderWithResponse;
+
 
 public class UserResourceService {
 
