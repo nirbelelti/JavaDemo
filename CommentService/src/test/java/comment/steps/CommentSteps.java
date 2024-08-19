@@ -42,7 +42,12 @@ public class CommentSteps {
     @Then("the response should contain the following data postId {int} userId {int} comment {string}")
     public void theResponseShouldContainTheFollowingDataPostIdUserIdComment(int arg0, int arg1, String arg2) {
             comment = new Comment(1, "Hello world I am a comment", 1, 1);
-            assertEquals(comment.toString(), "Comment{id=1, body='Hello world I am a comment', postId=1, userId=1}");
+            assertEquals(comment.toString(),  "{" +
+                    "\"id\":" + 1 +
+                    ", \"body\":" + "Hello world I am a comment" +
+                    ", \"postId\":" + 1 +
+                    ", \"userId\":" + 1 +
+                    '}');
 
     }
 }

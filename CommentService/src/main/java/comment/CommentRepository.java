@@ -73,6 +73,7 @@ public class CommentRepository {
     }
 
     public static void update(Comment comment) {
+        System.out.println("update comment " + comment.getId()+comment.getBody())  ;
         String sql = "UPDATE comment SET body = ? WHERE id = ?";
 
         try (Connection connection = DriverManager.getConnection(url);

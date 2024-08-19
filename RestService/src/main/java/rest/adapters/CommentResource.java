@@ -2,8 +2,8 @@ package rest.adapters;
 
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
-import org.rabbitmq.GenericReceiver;
-import org.rabbitmq.SenderWithResponse;
+//import org.rabbitmq.GenericReceiver;
+//import org.rabbitmq.SenderWithResponse;
 import rest.CommentResourceService;
 
 @Path("/comments")

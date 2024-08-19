@@ -1,8 +1,8 @@
 package rest;
 
-import comment.Comment;
-import org.rabbitmq.GenericReceiver;
-import org.rabbitmq.SenderWithResponse;
+import config.rabbitmq.GenericReceiver;
+import config.rabbitmq.SenderWithResponse;
+
 
 public class CommentResourceService {
     SenderWithResponse updateCommentSender = new SenderWithResponse("updateCommentQueue", "updateCommentReplyQueue");
@@ -12,6 +12,9 @@ public class CommentResourceService {
 
     SenderWithResponse deleteCommentSender = new SenderWithResponse("deleteCommentQueue", "deleteCommentReplyQueue");
     GenericReceiver deleteCommentReceiver = new GenericReceiver("deleteCommentReplyQueue");
+
+    SenderWithResponse getCommentsByPostSender = new SenderWithResponse("getCommentsByPostQueue", "getCommentsByPostReplyQueue");
+    GenericReceiver getCommentsByPostReceiver = new GenericReceiver("getCommentsByPostReplyQueue");
 
 
     private CommentResourceService() {
@@ -38,8 +41,7 @@ public class CommentResourceService {
         updateCommentSender.sendMessage( commentMessage);
         String receivedMessage = updateCommentReceiver.getReceivedMessage();
         if (receivedMessage != null && !receivedMessage.isEmpty()) {
-            Comment comment = new Comment(id, body, postId, userId);
-            return comment.toString();
+            return "Comment updated successfully";
         }
         return receivedMessage ;
     }
@@ -55,5 +57,16 @@ public class CommentResourceService {
         return receivedMessage;
     }
 
+    public String getCommentsByPost(int postId) {
+        System.out.println("getCommentsByPost");
+        getCommentsByPostReceiver.start();
+        String commentMessage = String.format("{ \"postId\" : \"%s\" }", postId);
+        getCommentsByPostSender.sendMessage(commentMessage);
+        String receivedMessage = getCommentsByPostReceiver.getReceivedMessage();
+        if (receivedMessage != null && !receivedMessage.isEmpty()) {
+            return receivedMessage;
+        }
+        return receivedMessage;
+    }
 
 }
