@@ -2,14 +2,7 @@ package rest.adapters;
 
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
-//import post.Post;
-import org.rabbitmq.SenderWithResponse;
-import org.rabbitmq.GenericReceiver;
 import rest.PostResourceService;
-//
-//import java.io.IOException;
-//import java.util.concurrent.TimeoutException;
-
 
 @Path("/posts")
 public class PostResource {
