@@ -27,6 +27,7 @@ public class FacadeSteps {
     public void theRequestIsProcessed() {
         System.out.println("Processing request" + postId + userId + body);
         id = operation.createComment(postId, userId, body);
+        comment.setId(id);
         System.out.println("Comment created with id: " + id);
 
 
@@ -45,7 +46,7 @@ public class FacadeSteps {
 
     @Then("the response should contain the following data commentId {int} postId {int} userId {int} comment {string}")
     public void theResponseShouldContainTheFollowingDataCommentIdPostIdUserIdComment(int arg0, int arg1, int arg2, String arg3) {
-        comment = comments.get(0);
+        comment = comments.get(1);
         assert(comment.getId() == 1);
         assert(comment.getPostId() == 1);
         assert(comment.getUserId() == 1);
