@@ -1,2 +1,4 @@
-UserSteps.class
 CucumberUserTest.class
+user/steps/UserRepositorySteps.class
+user/steps/UserSteps.class
+user/steps/UserFacadeSteps.class
