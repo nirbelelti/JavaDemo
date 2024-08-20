@@ -1,2 +1,5 @@
 /Users/nirbelelti/IdeaProjects/DemoProject/UserService/src/test/java/CucumberUserTest.java
-/Users/nirbelelti/IdeaProjects/DemoProject/UserService/src/test/java/UserSteps.java
+/Users/nirbelelti/IdeaProjects/DemoProject/UserService/src/test/java/user/steps/MessagesSteps.java
+/Users/nirbelelti/IdeaProjects/DemoProject/UserService/src/test/java/user/steps/UserSteps.java
+/Users/nirbelelti/IdeaProjects/DemoProject/UserService/src/test/java/user/steps/UserRepositorySteps.java
+/Users/nirbelelti/IdeaProjects/DemoProject/UserService/src/test/java/user/steps/UserFacadeSteps.java
