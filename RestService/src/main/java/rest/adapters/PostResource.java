@@ -45,5 +45,12 @@ public class PostResource {
     public String getPostByUser(@PathParam("userId") int userId) {
         return service.getPostByUser(userId);
     }
+    @Path("/{id}/comments")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getComments(@PathParam("id") int id) {
+        return service.getPostAndComments(id);
+    }
+
 }
 
