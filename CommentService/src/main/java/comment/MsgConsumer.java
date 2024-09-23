@@ -13,22 +13,29 @@ import java.util.ArrayList;
 
 public class MsgConsumer {
     private final static String CREATE_COMMENT_QUEUE = "createCommentQueue";
-
     private final static String UPDATE_COMMENT_QUEUE = "updateCommentQueue";
     private final static String DELETE_COMMENT_QUEUE = "deleteCommentQueue";
-
-
     private final static String GET_COMMENT_BY_POST_QUEUE = "getCommentsByPostQueue";
 
-    private static final ObjectMapper objectMapper = new ObjectMapper();
-    private static final CommentFacade facade = new CommentFacade();
+    private final ObjectMapper objectMapper;
+    private final CommentFacade facade;
+    private final Channel channel;
 
-//    To be implemented
-//    private final static String GET_COMMENT_BY_USER_QUEUE = "getCommentByUserQueue";
-//    private final static String GET_COMMENT_QUEUE = "getCommentQueue";
-//    private final static String GET_ALL_COMMENTS_QUEUE = "getAllCommentsQueue";
 
     ArrayList<String> result = new ArrayList<>();
+
+    public MsgConsumer(ObjectMapper objectMapper, CommentFacade facade, Channel channel) {
+        this.objectMapper = objectMapper;
+        this.facade = facade;
+        this.channel = channel;
+    }
+
+    public void start() {
+        createCommentStart();
+        updateCommentStart();
+        deleteCommentStart();
+        getCommentsByPostIdStart();
+    }
 
 
     public void createCommentStart() {
@@ -53,12 +60,12 @@ public class MsgConsumer {
                 int postId = jsonNode.get("postId").asInt();
                 int userId = jsonNode.get("userId").asInt();
                 String body = jsonNode.get("body").asText();
-                System.out.println("userID: " + userId + " postId: "+postId + " body: " + body);
+                System.out.println("userID: " + userId + " postId: " + postId + " body: " + body);
 
                 // Process the data
-                int id= facade.createComment(postId,userId,  body);
+                int id = facade.createComment(postId, userId, body);
                 System.out.println(" [x] Comment created with id: '" + id + "'");
-                Comment Comment = new Comment(id,body,postId, userId);
+                Comment Comment = new Comment(id, body, postId, userId);
                 String responseMessage = Comment.toString();
 
                 // Send the response back to the sender using the replyTo and correlationId
@@ -140,9 +147,9 @@ public class MsgConsumer {
                 JsonNode jsonNode = objectMapper.readTree(message);
                 int id = jsonNode.get("id").asInt();
 
-                String responseMessage = "Comment " + id + "not found";
+                String responseMessage = "Comment " + id + " not found";
                 try {
-                     facade.deleteComment(id);
+                    facade.deleteComment(id);
                     responseMessage = "Comment deleted";
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -165,6 +172,7 @@ public class MsgConsumer {
             e.printStackTrace();
         }
     }
+
     private ArrayList<String> convertToString(ArrayList<Comment> posts) {
         ArrayList<String> result = new ArrayList<>();
         for (Comment post : posts) {
@@ -174,7 +182,7 @@ public class MsgConsumer {
     }
 
     public synchronized void getCommentsByPostIdStart() {
-        System.out.println("getCommentsByPostIdStart");
+
         try {
             Connection connection = RabbitMQUtils.getConnection();
             Channel channel = connection.createChannel();
@@ -187,8 +195,7 @@ public class MsgConsumer {
                 JsonNode jsonNode = objectMapper.readTree(message);
                 int postId = jsonNode.get("postId").asInt();
 
-               result = convertToString( facade.getCommentByPost(postId));
-               System.out.println("Result: "+ result);
+                result = convertToString(facade.getCommentByPost(postId));
 
                 AMQP.BasicProperties properties = new AMQP.BasicProperties.Builder()
                         .correlationId(delivery.getProperties().getCorrelationId())
@@ -199,17 +206,29 @@ public class MsgConsumer {
             channel.basicConsume(GET_COMMENT_BY_POST_QUEUE, true, deliverCallback, consumerTag -> {
             });
 
-            System.out.println(" [*] Waiting for messages. To exit press Ctrl+C");
+            System.out.println(" [*] Waiting for messages new. To exit press Ctrl+C");
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public static void main(String[] args) {
-        MsgConsumer consumer = new MsgConsumer();
-        consumer.createCommentStart();
-        consumer.updateCommentStart();
-        consumer.deleteCommentStart();
-        consumer.getCommentsByPostIdStart();
+        try {
+            // Initialize necessary components
+            ObjectMapper objectMapper = new ObjectMapper();
+            CommentFacade facade = new CommentFacade();
+
+            Connection connection = RabbitMQUtils.getConnection();
+            Channel channel = connection.createChannel();
+
+            MsgConsumer consumer = new MsgConsumer(objectMapper, facade, channel);
+
+            consumer.start();
+
+            System.out.println(" [*] Waiting for messages. To exit press Ctrl+C");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
