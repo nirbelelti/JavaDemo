@@ -1,106 +1,89 @@
 package rest;
 
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.QueryParam;
 import config.rabbitmq.GenericReceiver;
 import config.rabbitmq.SenderWithResponse;
 
-
 public class UserResourceService {
 
-    SenderWithResponse allUsersSender = new SenderWithResponse("getAllUsersQueue", "allUserReplyQueue");
+    private final SenderWithResponse allUsersSender;
+    private final SenderWithResponse userSender;
+    private final SenderWithResponse getUserSender;
+    private final SenderWithResponse updateUserSender;
+    private final SenderWithResponse deleteUserSender;
 
-    SenderWithResponse userSender = new SenderWithResponse("createUserQueue", "createUserReplyQueue");
-    SenderWithResponse getUserSender = new SenderWithResponse("getUserQueue", "getUserReplyQueue");
-    SenderWithResponse updateUserSender = new SenderWithResponse("updateUserQueue", "updateUserReplyQueue");
-    SenderWithResponse deleteUserSender = new SenderWithResponse("deleteUserQueue", "deleteUserReplyQueue");
+    private final GenericReceiver allUsersReceiver;
+    private final GenericReceiver userCreateReceiver;
+    private final GenericReceiver userReceiver;
+    private final GenericReceiver updateUserReceiver;
+    private final GenericReceiver deleteUserReceiver;
 
-
-
-    GenericReceiver allUsersReceiver = new GenericReceiver("allUserReplyQueue");
-    GenericReceiver userCreateReceiver = new GenericReceiver("createUserReplyQueue");
-    GenericReceiver userReceiver = new GenericReceiver("getUserReplyQueue");
-    GenericReceiver updateUserReceiver = new GenericReceiver("updateUserReplyQueue");
-    GenericReceiver deleteUserReceiver = new GenericReceiver("deleteUserReplyQueue");
-
-    private UserResourceService() {
+    public UserResourceService(
+            SenderWithResponse allUsersSender,
+            SenderWithResponse userSender,
+            SenderWithResponse getUserSender,
+            SenderWithResponse updateUserSender,
+            SenderWithResponse deleteUserSender,
+            GenericReceiver allUsersReceiver,
+            GenericReceiver userCreateReceiver,
+            GenericReceiver userReceiver,
+            GenericReceiver updateUserReceiver,
+            GenericReceiver deleteUserReceiver
+    ) {
+        this.allUsersSender = allUsersSender;
+        this.userSender = userSender;
+        this.getUserSender = getUserSender;
+        this.updateUserSender = updateUserSender;
+        this.deleteUserSender = deleteUserSender;
+        this.allUsersReceiver = allUsersReceiver;
+        this.userCreateReceiver = userCreateReceiver;
+        this.userReceiver = userReceiver;
+        this.updateUserReceiver = updateUserReceiver;
+        this.deleteUserReceiver = deleteUserReceiver;
     }
 
     public static UserResourceService getInstance() {
-        return new UserResourceService();
+        return new UserResourceService(
+                new SenderWithResponse("getAllUsersQueue", "allUserReplyQueue"),
+                new SenderWithResponse("createUserQueue", "createUserReplyQueue"),
+                new SenderWithResponse("getUserQueue", "getUserReplyQueue"),
+                new SenderWithResponse("updateUserQueue", "updateUserReplyQueue"),
+                new SenderWithResponse("deleteUserQueue", "deleteUserReplyQueue"),
+                new GenericReceiver("allUserReplyQueue"),
+                new GenericReceiver("createUserReplyQueue"),
+                new GenericReceiver("getUserReplyQueue"),
+                new GenericReceiver("updateUserReplyQueue"),
+                new GenericReceiver("deleteUserReplyQueue")
+        );
+    }
+
+
+    private String sendMessageAndGetResponse(SenderWithResponse sender, GenericReceiver receiver, String message) {
+        receiver.start();
+        sender.sendMessage(message);
+        String receivedMessage = receiver.getReceivedMessage();
+        return (receivedMessage != null && !receivedMessage.isEmpty()) ? receivedMessage : "Default response if no message received";
     }
 
     public String getUsers() {
-        allUsersReceiver.start();
-        allUsersSender.sendMessage("Get all users");
-        String receivedMessage = allUsersReceiver.getReceivedMessage();
-        if (receivedMessage != null && !receivedMessage.isEmpty()) {
-            return receivedMessage;
-        }
-        return "No users Found";
+        return sendMessageAndGetResponse(allUsersSender, allUsersReceiver, "Get all users");
     }
 
     public String getUser(int id) {
-        userReceiver.start();
-
-        String userMessage = String.format( "{ \"id\" : \"%s\" }", id);
-        getUserSender.sendMessage(userMessage);
-
-        String receivedMessage = userReceiver.getReceivedMessage();
-        if (receivedMessage != null && !receivedMessage.isEmpty()) {
-            // Use the received message instead of the fixed string
-            return receivedMessage;
-
-        }
-
-        // Fallback to a default message if the received message is not available
-        return "Default response if no message received";
+        String userMessage = String.format("{ \"id\" : \"%s\" }", id);
+        return sendMessageAndGetResponse(getUserSender, userReceiver, userMessage);
     }
 
-    public String createUser(String firstName, String lastName,String address){
-        userCreateReceiver.start();
-        //  String userMessage =  "{ \"color\" : \"Black\", \"type\" : \"FIAT\" }";
-        String userMessage = String.format( "{ \"firstName\" : \"%s\", \"lastName\" : \"%s\", \"address\" : \"%s\" }", firstName, lastName, address);
-        // String userMessage = String.format("{"+"color: %s,Name: %s, LastName: %s, Address: %s", "","user.getFirstName()", "user.getLastName()", "user.getAddress()"+"}");
-        userSender.sendMessage(userMessage);
-
-        String receivedMessage = userCreateReceiver.getReceivedMessage();
-        if (receivedMessage != null && !receivedMessage.isEmpty()) {
-            // Use the received message instead of the fixed string
-            return receivedMessage;
-        }
-
-        // Fallback to a default message if the received message is not available
-        return "Default response if no message received";
+    public String createUser(String firstName, String lastName, String address) {
+        String userMessage = String.format("{ \"firstName\" : \"%s\", \"lastName\" : \"%s\", \"address\" : \"%s\" }", firstName, lastName, address);
+        return sendMessageAndGetResponse(userSender, userCreateReceiver, userMessage);
     }
 
-    public String updateUser(int id, String firstName,  String lastName,  String address){
-        System.out.println("UserResource.updateUser: "+id );
-        System.out.println("UserResource.updateUser: "+firstName );
-        System.out.println("UserResource.updateUser: "+lastName );
-        System.out.println("UserResource.updateUser: "+address );
-        updateUserReceiver.start();
-        String userMessage = String.format( "{ \"id\" : \"%s\", \"firstName\" : \"%s\", \"lastName\" : \"%s\", \"address\" : \"%s\" }", id, firstName, lastName, address);
-        updateUserSender.sendMessage(userMessage);
-
-        String receivedMessage = updateUserReceiver.getReceivedMessage();
-        if (receivedMessage != null && !receivedMessage.isEmpty()) {
-            // Use the received message instead of the fixed string
-            return receivedMessage;
-        }
-
-        return "Something went wrong, try again later.";
+    public String updateUser(int id, String firstName, String lastName, String address) {
+        String userMessage = String.format("{ \"id\" : \"%s\", \"firstName\" : \"%s\", \"lastName\" : \"%s\", \"address\" : \"%s\" }", id, firstName, lastName, address);
+        return sendMessageAndGetResponse(updateUserSender, updateUserReceiver, userMessage);
     }
 
-    public String deleteUser(int id){
-        deleteUserReceiver.start();
-        deleteUserSender.sendMessage(String.valueOf(id));
-        String receivedMessage = deleteUserReceiver.getReceivedMessage();
-        if (receivedMessage != null && !receivedMessage.isEmpty()) {
-            // Use the received message instead of the fixed string
-            return receivedMessage;
-        }
-        return "Something went wrong, try again later.";
+    public String deleteUser(int id) {
+        return sendMessageAndGetResponse(deleteUserSender, deleteUserReceiver, String.valueOf(id));
     }
-
 }
