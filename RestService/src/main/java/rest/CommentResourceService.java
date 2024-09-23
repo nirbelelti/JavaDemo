@@ -2,71 +2,76 @@ package rest;
 
 import config.rabbitmq.GenericReceiver;
 import config.rabbitmq.SenderWithResponse;
-
+import jakarta.ws.rs.PathParam;
 
 public class CommentResourceService {
-    SenderWithResponse updateCommentSender = new SenderWithResponse("updateCommentQueue", "updateCommentReplyQueue");
-    GenericReceiver updateCommentReceiver = new GenericReceiver("updateCommentReplyQueue");
-    SenderWithResponse commentSender = new SenderWithResponse("createCommentQueue", "createCommentReplyQueue");
-    GenericReceiver commentCreateReceiver = new GenericReceiver("createCommentReplyQueue");
 
-    SenderWithResponse deleteCommentSender = new SenderWithResponse("deleteCommentQueue", "deleteCommentReplyQueue");
-    GenericReceiver deleteCommentReceiver = new GenericReceiver("deleteCommentReplyQueue");
+    private final SenderWithResponse updateCommentSender;
+    private final GenericReceiver updateCommentReceiver;
+    private final SenderWithResponse commentSender;
+    private final GenericReceiver commentCreateReceiver;
+    private final SenderWithResponse deleteCommentSender;
+    private final GenericReceiver deleteCommentReceiver;
+    private final SenderWithResponse getCommentsByPostSender;
+    private final GenericReceiver getCommentsByPostReceiver;
 
-    SenderWithResponse getCommentsByPostSender = new SenderWithResponse("getCommentsByPostQueue", "getCommentsByPostReplyQueue");
-    GenericReceiver getCommentsByPostReceiver = new GenericReceiver("getCommentsByPostReplyQueue");
-
-
-    private CommentResourceService() {
+    public CommentResourceService(
+            SenderWithResponse updateCommentSender,
+            GenericReceiver updateCommentReceiver,
+            SenderWithResponse commentSender,
+            GenericReceiver commentCreateReceiver,
+            SenderWithResponse deleteCommentSender,
+            GenericReceiver deleteCommentReceiver,
+            SenderWithResponse getCommentsByPostSender,
+            GenericReceiver getCommentsByPostReceiver
+    ) {
+        this.updateCommentSender = updateCommentSender;
+        this.updateCommentReceiver = updateCommentReceiver;
+        this.commentSender = commentSender;
+        this.commentCreateReceiver = commentCreateReceiver;
+        this.deleteCommentSender = deleteCommentSender;
+        this.deleteCommentReceiver = deleteCommentReceiver;
+        this.getCommentsByPostSender = getCommentsByPostSender;
+        this.getCommentsByPostReceiver = getCommentsByPostReceiver;
     }
+
     public static CommentResourceService getInstance() {
-        return new CommentResourceService();
+        return new CommentResourceService(
+                new SenderWithResponse("updateCommentQueue", "updateCommentReplyQueue"),
+                new GenericReceiver("updateCommentReplyQueue"),
+                new SenderWithResponse("createCommentQueue", "createCommentReplyQueue"),
+                new GenericReceiver("createCommentReplyQueue"),
+                new SenderWithResponse("deleteCommentQueue", "deleteCommentReplyQueue"),
+                new GenericReceiver("deleteCommentReplyQueue"),
+                new SenderWithResponse("getCommentsByPostQueue", "getCommentsByPostReplyQueue"),
+                new GenericReceiver("getCommentsByPostReplyQueue")
+        );
+    }
+
+    private String sendMessageAndGetResponse(SenderWithResponse sender, GenericReceiver receiver, String message) {
+        receiver.start();
+        sender.sendMessage(message);
+        String receivedMessage = receiver.getReceivedMessage();
+        return (receivedMessage != null && !receivedMessage.isEmpty()) ? receivedMessage : "No response received";
     }
 
     public String createComment(int userId, int postId, String body) {
-        commentCreateReceiver.start();
         String commentMessage = String.format("{ \"userId\" : \"%s\", \"postId\" : \"%s\", \"body\" : \"%s\" }", userId, postId, body);
-        // String PostMessage = String.format("{"+"color: %s,Name: %s, LastName: %s, Address: %s", "","post.getFirstName()", "post.getLastName()", "post.getAddress()"+"}");
-        commentSender.sendMessage(commentMessage);
-        String receivedMessage = commentCreateReceiver.getReceivedMessage();
-        if (receivedMessage != null && !receivedMessage.isEmpty()) {
-            return receivedMessage;
-        }
-        return receivedMessage;
+        return sendMessageAndGetResponse(commentSender, commentCreateReceiver, commentMessage);
     }
 
-    public String updateComment(int id, int userId,int postId, String body) {
-        updateCommentReceiver.start();
-        String commentMessage = String.format( "{ \"id\" : \"%s\",\"userId\" : \"%s\", \"postId\" : \"%s\", \"body\" : \"%s\" }",id, userId, postId, body);
-        updateCommentSender.sendMessage( commentMessage);
-        String receivedMessage = updateCommentReceiver.getReceivedMessage();
-        if (receivedMessage != null && !receivedMessage.isEmpty()) {
-            return "Comment updated successfully";
-        }
-        return receivedMessage ;
+    public String updateComment(int id, int userId, int postId, String body) {
+        String commentMessage = String.format("{ \"id\" : \"%s\", \"userId\" : \"%s\", \"postId\" : \"%s\", \"body\" : \"%s\" }", id, userId, postId, body);
+        return sendMessageAndGetResponse(updateCommentSender, updateCommentReceiver, commentMessage);
     }
 
-    public String deleteComment(int id) {
-        deleteCommentReceiver.start();
+    public String deleteComment(@PathParam("id") String id) {
         String commentMessage = String.format("{ \"id\" : \"%s\" }", id);
-        deleteCommentSender.sendMessage(commentMessage);
-        String receivedMessage = deleteCommentReceiver.getReceivedMessage();
-        if (receivedMessage != null && !receivedMessage.isEmpty()) {
-            return receivedMessage;
-        }
-        return receivedMessage;
+        return sendMessageAndGetResponse(deleteCommentSender, deleteCommentReceiver, commentMessage);
     }
 
     public String getCommentsByPost(int postId) {
-        System.out.println("getCommentsByPost");
-        getCommentsByPostReceiver.start();
         String commentMessage = String.format("{ \"postId\" : \"%s\" }", postId);
-        getCommentsByPostSender.sendMessage(commentMessage);
-        String receivedMessage = getCommentsByPostReceiver.getReceivedMessage();
-        if (receivedMessage != null && !receivedMessage.isEmpty()) {
-            return receivedMessage;
-        }
-        return receivedMessage;
+        return sendMessageAndGetResponse(getCommentsByPostSender, getCommentsByPostReceiver, commentMessage);
     }
-
 }

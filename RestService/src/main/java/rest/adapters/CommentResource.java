@@ -32,7 +32,7 @@ public class CommentResource {
     @Path("/{id}")
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
-    public String deleteComment(@PathParam("id") int id){
+    public String deleteComment(@PathParam("id") String id){
         return service.deleteComment(id);
     }
 }
