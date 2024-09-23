@@ -16,11 +16,44 @@ This project is a demonstration of a microservices architecture using various te
 - **SQLite**: A lightweight, file-based database used for data storage.
 
 ## Project Structure
+```
+├── DemoProject                # Root directory
+│   └── CommentService         # Comment service
+│       └── src                 # Source files
+│           └── main            # Main application code
+│           └── test            # Test step definitions    
+│       └── target              # Compiled files
+│       └── Dockerfile          # Dockerfile for Comment service
+│       └── pom.xml             # Maven configuration file
+│       └── DB.file            # (optional) SQLite database file will be created here after running the service
+│   └── PostService            # Post service
+│       └── src                 # Source files
+│           └── main            # Main application code
+│           └── test            # Test step definitions    
+│       └── target              # Compiled files
+│       └── Dockerfile          # Dockerfile for Comment service
+│       └── pom.xml             # Maven configuration file
+│       └── DB.file            # (optional) SQLite database file will be created here after running the service
+│   └── UserService            # User service  
+│       └── src                 # Source files
+│           └── main            # Main application code
+│           └── test            # Test step definitions    
+│       └── target              # Compiled files
+│       └── Dockerfile          # Dockerfile for Comment service
+│       └── pom.xml             # Maven configuration file
+│       └── DB.file            # (optional) SQLite database file will be created here after running the service  
+│   └── RestService            # Rest service (Quarkus)       
+├── README.md                # Project README
+├── docker-compose.yml       # Docker-Compose file to set up RabbitMQ and other services up/down
 
-- `src/main/java`: Contains the main application code.
-- `src/test/java`: Contains the test code, including Cucumber step definitions.
-- `src/main/resources`: Contains configuration files.
-- `docker-compose.yml`: Docker-Compose file to set up the RabbitMQ service and other dependencies.
+```
+
+### Services Overview
+
+- **UserService**: Manages user information, including user creation, retrieval, update, and deletion.
+- **PostService**: Manages post information, including post creation, retrieval, update, and deletion.
+- **CommentService**: Manages comment information, including comment creation, retrieval, update, and deletion.
+- **RestService**: A Quarkus service that acts as a REST API for the other services.
 
 ## How to Use
 
@@ -39,52 +72,30 @@ This project is a demonstration of a microservices architecture using various te
     cd <repository-directory>
     ```
 
-2. **Build the Project**:
+2. **Build the Project (for each service)**:
     ```sh
     mvn clean install
     ```
-
-3. **Start RabbitMQ using Docker-Compose**:
-    ```sh
-    docker-compose up -d
-    ```
-
-4. **Run the Application**:
-    ```sh
-    mvn spring-boot:run
-    ```
-
-5. **Run the Tests**:
+3. **Run the Tests**:
     ```sh
     mvn test
     ```
+4. **Start maven Quarkus application**:
+    ```sh
+    mvn quarkus:dev
+    ```
+
+**FYI:**
+1. The application will be running on port 8080
+2. RabbitMQ will be running on port 5672 and can be accessed at http://localhost:15672 with username and password as guest
+3. Make sure RabbitMQ is configured correctly and running on the default port (5672). If RabbitMQ is running on a different host or port, update the configuration in your application properties accordingly.
+
+
+
+
+
 
 ### Running the Application with Docker
-
-1. **Start All Services Using Docker-Compose**:
-    ```sh
-    docker-compose up -d
-    ```
-
-2. **Run Each Service Independently**:
-   Each service can also be run independently using its own Dockerfile. Navigate to the service directory and build and run the Docker container:
-    ```sh
-    cd <service-directory>
-    docker build -t <service-name> .
-    docker run -p <port>:<port> <service-name>
-    ```
-
-### Running the Application Locally Without Docker
-
-To run the application locally without using Docker, follow these steps:
-
-### Prerequisites
-
-- Java 11 or higher
-- Maven
-- RabbitMQ installed and running locally
-
-### Steps
 
 1. **Clone the Repository**:
     ```sh
@@ -92,25 +103,10 @@ To run the application locally without using Docker, follow these steps:
     cd <repository-directory>
     ```
 
-2. **Build the Project**:
+1. **Start All Services Using Docker-Compose**:
     ```sh
-    mvn clean install
+    docker-compose up -d
     ```
-
-3. **Start RabbitMQ**:
-   Ensure RabbitMQ is installed and running on your local machine. You can download and install RabbitMQ from [here](https://www.rabbitmq.com/download.html).
-
-4. **Run the Application**:
-    ```sh
-    mvn spring-boot:run
-    ```
-
-5. **Run the Tests**:
-    ```sh
-    mvn test
-    ```
-
-Make sure RabbitMQ is configured correctly and running on the default port (5672). If RabbitMQ is running on a different host or port, update the configuration in your application properties accordingly.
 
 ## Features
 
