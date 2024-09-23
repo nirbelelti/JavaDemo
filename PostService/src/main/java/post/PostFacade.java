@@ -19,9 +19,7 @@ public class PostFacade {
         return id;
     }
 
-
     public String getPost(int i) {
-        System.out.println("Hej" +i);
         post = PostRepository.getPostById(i);
         return post.toString();
     }
